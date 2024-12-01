@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐱 The Ultimate Cat Paradise</title>
+    <title>🐱 The Ultimate Cat Paradise - Cuteness Battle!</title>
     <style>
         :root {
             --primary-color: #ff6b6b;
@@ -48,75 +48,57 @@
             padding: 2rem;
         }
 
-        .card {
+        /* Voting Game Styles */
+        .voting-game {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 2rem;
             margin: 2rem 0;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transform: translateY(0);
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .fact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .fact-card {
-            background: var(--light-bg);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 5px solid var(--secondary-color);
-        }
-
-        .breed-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .breed-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
+        .game-title {
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .breed-card h3 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .care-tips {
-            background: var(--secondary-color);
-            color: white;
-            padding: 3rem 0;
-            margin: 3rem 0;
+        .cat-battle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
         }
 
-        .tip-card {
-            background: rgba(255,255,255,0.1);
+        .cat-card {
+            position: relative;
+            background: var(--light-bg);
+            border-radius: 15px;
             padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            backdrop-filter: blur(5px);
-        }
-
-        .interactive-section {
             text-align: center;
-            margin: 3rem 0;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
         }
 
-        button {
+        .cat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .cat-image {
+            width: 100%;
+            height: 300px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .vote-btn {
             background: var(--primary-color);
             color: white;
             border: none;
@@ -125,156 +107,192 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: transform 0.3s ease;
+            margin-top: 1rem;
         }
 
-        button:hover {
+        .vote-btn:hover {
             transform: scale(1.05);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fact-counter {
-            display: inline-block;
+        .vote-count {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
             background: var(--accent-color);
             color: var(--text-color);
             padding: 0.5rem 1rem;
             border-radius: 20px;
-            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .leaderboard {
+            margin-top: 3rem;
+            background: var(--light-bg);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .leaderboard h3 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .winner-crown {
+            color: gold;
+            margin-right: 0.5rem;
+        }
+
+        .vs-badge {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            font-weight: bold;
+            z-index: 1;
         }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
+            .cat-battle {
+                grid-template-columns: 1fr;
             }
-            .container {
-                padding: 1rem;
+            
+            .vs-badge {
+                top: 0;
+                transform: translate(-50%, -50%);
             }
+        }
+
+        /* Animation keyframes */
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .vote-animation {
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <h1>🐱 The Ultimate Cat Paradise</h1>
-            <p>Discover the fascinating world of our feline friends</p>
+            <h1>🐱 Cat Cuteness Battle!</h1>
+            <p>Vote for the cutest kitty and see who reigns supreme!</p>
         </div>
     </header>
 
     <main class="container">
-        <section class="card" id="intro">
-            <h2>Welcome to Cat Paradise! 🌟</h2>
-            <p>Embark on a journey through the enchanting world of cats. From fascinating facts to expert care tips, we've got everything a cat lover needs!</p>
-            <div class="fact-counter" id="viewCounter">Cat Lovers Visited: 1,337</div>
-        </section>
-
-        <section class="breed-section">
-            <div class="breed-card">
-                <h3>Persian</h3>
-                <p>Known for their luxurious coat and sweet personality</p>
-            </div>
-            <div class="breed-card">
-                <h3>Siamese</h3>
-                <p>Intelligent and vocal cats with distinctive features</p>
-            </div>
-            <div class="breed-card">
-                <h3>Maine Coon</h3>
-                <p>Gentle giants with magnificent fur</p>
-            </div>
-            <div class="breed-card">
-                <h3>British Shorthair</h3>
-                <p>Round-faced beauties with plush coats</p>
-            </div>
-        </section>
-
-        <section class="fact-grid">
-            <div class="fact-card">
-                <h3>Did You Know? 🤔</h3>
-                <p>Cats spend 70% of their lives sleeping, which equals about 13-16 hours a day!</p>
-            </div>
-            <div class="fact-card">
-                <h3>Amazing! 🌟</h3>
-                <p>A cat's nose print is unique, just like a human's fingerprint!</p>
-            </div>
-            <div class="fact-card">
-                <h3>Wow! 😮</h3>
-                <p>Cats can rotate their ears 180 degrees, helping them locate sounds with precision!</p>
-            </div>
-        </section>
-
-        <section class="care-tips">
-            <div class="container">
-                <h2>Essential Care Tips 💝</h2>
-                <div class="tip-card">
-                    <h3>Daily Care</h3>
-                    <p>Fresh water, clean litter box, and lots of love!</p>
+        <section class="voting-game">
+            <h2 class="game-title">😺 Who's Cuter? 😺</h2>
+            
+            <div class="cat-battle">
+                <div class="cat-card" onclick="voteForCat(0)">
+                    <div class="vote-count" id="votes-0">0 votes</div>
+                    <div class="cat-image">😺</div>
+                    <h3>Mr. Whiskers</h3>
+                    <p>The sophisticated gentleman</p>
+                    <button class="vote-btn" onclick="voteForCat(0)">Vote for Mr. Whiskers!</button>
                 </div>
-                <div class="tip-card">
-                    <h3>Health Check</h3>
-                    <p>Regular vet visits keep your kitty healthy and happy!</p>
-                </div>
-                <div class="tip-card">
-                    <h3>Exercise & Play</h3>
-                    <p>Keep your cat active with daily play sessions!</p>
-                </div>
-            </div>
-        </section>
 
-        <section class="interactive-section">
-            <h2>Want to Learn More?</h2>
-            <button onclick="alert('Thank you for your interest in cats! 🐱')" id="subscribe-btn">Get Cat Facts!</button>
+                <div class="cat-card" onclick="voteForCat(1)">
+                    <div class="vote-count" id="votes-1">0 votes</div>
+                    <div class="cat-image">😻</div>
+                    <h3>Princess Paw</h3>
+                    <p>The elegant lady</p>
+                    <button class="vote-btn" onclick="voteForCat(1)">Vote for Princess Paw!</button>
+                </div>
+
+                <div class="vs-badge">VS</div>
+            </div>
+
+            <div class="leaderboard">
+                <h3>🏆 Cuteness Leaderboard</h3>
+                <ul class="leaderboard-list" id="leaderboard">
+                    <!-- Populated by JavaScript -->
+                </ul>
+            </div>
         </section>
     </main>
 
     <script>
-        // Add some interactivity
-        document.addEventListener('DOMContentLoaded', function() {
-            // Fade in elements as they scroll into view
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            });
+        // Initialize vote counts from localStorage or default to 0
+        let votes = JSON.parse(localStorage.getItem('catVotes')) || [0, 0];
+        const cats = [
+            { name: 'Mr. Whiskers', title: 'The sophisticated gentleman' },
+            { name: 'Princess Paw', title: 'The elegant lady' }
+        ];
 
-            document.querySelectorAll('.card, .breed-card, .fact-card, .tip-card').forEach((el) => {
-                el.style.opacity = 0;
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                observer.observe(el);
-            });
+        // Update initial vote counts
+        updateVoteCounts();
+        updateLeaderboard();
 
-            // Simple counter animation
-            let count = 0;
-            const target = 1337;
-            const counter = document.getElementById('viewCounter');
-            const duration = 2000;
-            const step = timestamp => {
-                if (!start) start = timestamp;
-                const progress = timestamp - start;
-                count = Math.min(Math.floor((progress / duration) * target), target);
-                counter.textContent = `Cat Lovers Visited: ${count.toLocaleString()}`;
-                if (progress < duration) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            let start = null;
-            window.requestAnimationFrame(step);
+        function voteForCat(index) {
+            votes[index]++;
+            localStorage.setItem('catVotes', JSON.stringify(votes));
+            
+            // Add bounce animation
+            const voteCount = document.getElementById(`votes-${index}`);
+            voteCount.classList.remove('vote-animation');
+            void voteCount.offsetWidth; // Trigger reflow
+            voteCount.classList.add('vote-animation');
+            
+            updateVoteCounts();
+            updateLeaderboard();
+        }
+
+        function updateVoteCounts() {
+            votes.forEach((count, index) => {
+                document.getElementById(`votes-${index}`).textContent = `${count} votes`;
+            });
+        }
+
+        function updateLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            const sortedCats = cats.map((cat, index) => ({
+                ...cat,
+                votes: votes[index],
+                index
+            })).sort((a, b) => b.votes - a.votes);
+
+            leaderboard.innerHTML = sortedCats.map((cat, position) => `
+                <li class="leaderboard-item">
+                    <span>
+                        ${position === 0 ? '<span class="winner-crown">👑</span>' : ''}
+                        #${position + 1} ${cat.name}
+                    </span>
+                    <span>${cat.votes} votes</span>
+                </li>
+            `).join('');
+        }
+
+        // Add some randomized movement to emojis for fun
+        document.querySelectorAll('.cat-image').forEach(cat => {
+            setInterval(() => {
+                const randomDeg = Math.random() * 10 - 5;
+                cat.style.transform = `rotate(${randomDeg}deg)`;
+            }, 2000);
         });
     </script>
 </body>
